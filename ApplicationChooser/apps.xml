@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<apps>
+  <app name="test" command="cmd" arguments="/C &quot;pause&quot;" required="1">
+    <app name="test sub" command="firefox" visible="0" />
+  </app>
+  <app name="test2" command="cmd pause">
+    <app name="test2 sub1" command="cmd" />
+    <app name="test2 sub2" command="cmd" />
+    <app name="test2 sub3" command="cmd" required="1" />
+  </app>
+  <app name="test3" command="dir" />
+  <app name="test4" command="cmd">
+    <app name="test4 sub1" command="cmd" />
+    <app name="test4 sub2" command="cmd" visible="0" />
+  </app>
+</apps>
