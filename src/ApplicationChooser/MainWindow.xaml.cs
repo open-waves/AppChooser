@@ -28,15 +28,20 @@ namespace ApplicationChooser
         {
             try
             {
-                var config = XDocument.Load("apps.xml");
+                var configFilePath = string.Empty;
+                if (App.Args.Count > 0)
+                    configFilePath = App.Args[0];
+
+                configFilePath = string.IsNullOrEmpty(configFilePath) ? "apps.xml" : configFilePath;
+                var config = XDocument.Load(configFilePath);
                 Items = config.Element("apps").Elements("app").Select(n => GetAppNode(n)).ToList();
             }
-            catch (FileNotFoundException ex)
+            catch (FileNotFoundException)
             {
                 MessageBox.Show("Unable to find apps.xml", "Error");
                 Close();
             }
-            catch (NullReferenceException ex)
+            catch (NullReferenceException)
             {
                 MessageBox.Show("Invalid apps.xml structure", "Error");
                 Close();
@@ -84,7 +89,7 @@ namespace ApplicationChooser
                     if (process != null) 
                         process.WaitForExit();
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     failedItems.Add(itemView.AppItem);
                     //TODO: Add logging
