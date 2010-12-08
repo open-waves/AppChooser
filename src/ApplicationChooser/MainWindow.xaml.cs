@@ -36,14 +36,21 @@ namespace ApplicationChooser
                 var config = XDocument.Load(configFilePath);
                 Items = config.Element("apps").Elements("app").Select(n => GetAppNode(n)).ToList();
             }
-            catch (FileNotFoundException)
+            catch (FileNotFoundException ex)
             {
+                Log.WriteLine("could not find apps.xml", ex);
                 MessageBox.Show("Unable to find apps.xml", "Error");
                 Close();
             }
-            catch (NullReferenceException)
+            catch (NullReferenceException ex)
             {
+                Log.WriteLine("invalid apps.xml structure", ex);
                 MessageBox.Show("Invalid apps.xml structure", "Error");
+                Close();
+            }
+            catch(Exception ex)
+            {
+                Log.WriteLine("Unknown error", ex);
                 Close();
             }
         }
@@ -85,14 +92,18 @@ namespace ApplicationChooser
 
                 try
                 {
+                    // skip empty commands
+                    if (string.IsNullOrEmpty(itemView.AppItem.Command))
+                        continue;
+
                     var process = Process.Start(itemView.AppItem.Command, itemView.AppItem.Arguments);
                     if (process != null) 
                         process.WaitForExit();
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
+                    Log.WriteLine(string.Format("Could not execute item {0}", itemView.AppItem.Name), ex);
                     failedItems.Add(itemView.AppItem);
-                    //TODO: Add logging
                 }
             }
 
