@@ -14,14 +14,13 @@ namespace ApplicationChooser
     /// </summary>
     public partial class MainWindow : Window
     {
-        public IList<AppItemViewModel> Items { get; set;}
+        public IList<AppItemViewModel> Items { get; set; }
 
         public MainWindow()
         {
             InitializeComponent();
             LoadApps();
             DataContext = this;
-
         }
 
         public void LoadApps()
@@ -48,7 +47,7 @@ namespace ApplicationChooser
                 MessageBox.Show("Invalid apps.xml structure", "Error");
                 Close();
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 Log.WriteLine("Unknown error", ex);
                 Close();
@@ -59,13 +58,13 @@ namespace ApplicationChooser
         {
             var item = new AppItemViewModel(new AppItem
                                      {
-                                         Name = (string) appNode.Attribute("name"),
-                                         Command = (string) appNode.Attribute("command"),
-                                         Arguments = (string) appNode.Attribute("arguments"),
-                                         IsRequired = (bool?) appNode.Attribute("required") ?? false
+                                         Name = (string)appNode.Attribute("name"),
+                                         Command = (string)appNode.Attribute("command"),
+                                         Arguments = (string)appNode.Attribute("arguments"),
+                                         IsRequired = (bool?)appNode.Attribute("required") ?? false
                                      });
 
-            var isVisible = (bool?) appNode.Attribute("visible") ?? true;
+            var isVisible = (bool?)appNode.Attribute("visible") ?? true;
             item.Visibility = isVisible ? Visibility.Visible : Visibility.Collapsed;
 
             if (!isVisible)
@@ -77,7 +76,7 @@ namespace ApplicationChooser
                 child.Parent = item;
                 item.SubApps.Add(child);
             }
-
+            
             return item;
         }
 
@@ -88,8 +87,6 @@ namespace ApplicationChooser
             var failedItems = new List<AppItem>();
             foreach (var itemView in selectedItems)
             {
-                UpdateStatus(itemView.AppItem, (Convert.ToDouble(++i) * 100) / selectedItems.Count());
-
                 try
                 {
                     // skip empty commands
@@ -97,8 +94,9 @@ namespace ApplicationChooser
                         continue;
 
                     var process = Process.Start(itemView.AppItem.Command, itemView.AppItem.Arguments);
-                    if (process != null) 
+                    if (process != null)
                         process.WaitForExit();
+                    UpdateStatus(itemView.AppItem, (Convert.ToDouble(++i) * 100) / selectedItems.Count());
                 }
                 catch (Exception ex)
                 {
@@ -119,7 +117,10 @@ namespace ApplicationChooser
             var apps = new List<AppItemViewModel>();
             foreach (var model in itemViewModels)
             {
-                apps.Add(model);
+                if (model.SubApps.All(x => x.IsSelected))
+                {
+                    apps.Add(model);
+                }
                 apps.AddRange(GetItemsToExecute(model.SubApps));
             }
 
