@@ -1,6 +1,6 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 10.00
-# Visual Studio 2008
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ApplicationChooser", "ApplicationChooser\ApplicationChooser.csproj", "{BC53C279-FD03-4BFB-A866-F67F04C55966}"
 EndProject
 Global
