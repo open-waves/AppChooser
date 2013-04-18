@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Windows;
 using System.Xml.Linq;
+using System.Threading;
 
 namespace ApplicationChooser
 {
@@ -82,6 +83,7 @@ namespace ApplicationChooser
 
         private void Execute()
         {
+
             var selectedItems = GetItemsToExecute(Items.Where(it => it.IsSelected));
             var i = 0;
             var failedItems = new List<AppItem>();
@@ -90,13 +92,19 @@ namespace ApplicationChooser
                 try
                 {
                     // skip empty commands
+
+                    
+
+
                     if (string.IsNullOrEmpty(itemView.AppItem.Command))
                         continue;
 
                     var process = Process.Start(itemView.AppItem.Command, itemView.AppItem.Arguments);
+                    
                     if (process != null)
                         process.WaitForExit();
                     UpdateStatus(itemView.AppItem, (Convert.ToDouble(++i) * 100) / selectedItems.Count());
+                    
                 }
                 catch (Exception ex)
                 {
@@ -109,7 +117,9 @@ namespace ApplicationChooser
                 MessageBox.Show(string.Format("Could not execute the following items:\n{0}",
                                               string.Join("\n", failedItems.Select(it => it.Name).ToArray())), "Error");
 
-            Close();
+            
+            
+            
         }
 
         private List<AppItemViewModel> GetItemsToExecute(IEnumerable<AppItemViewModel> itemViewModels)
@@ -129,9 +139,13 @@ namespace ApplicationChooser
 
         private void UpdateStatus(AppItem currentItem, double value)
         {
-            progressLabel.Text = currentItem.Name;
-            progressBar.Value = value;
-
+            this.Dispatcher.Invoke((Action) (() =>
+                                                 {
+                                                     progressLabel.Text = currentItem.Name;
+                                                     progressBar.Value = value;
+                                                 }));
+            
+            
             //pretty...useless
             //var duration = new Duration(TimeSpan.FromSeconds(5));
             //var doubleanimation = new DoubleAnimation(value, duration);
@@ -142,7 +156,8 @@ namespace ApplicationChooser
         {
             progressBar.Visibility = Visibility.Visible;
             button.IsEnabled = false;
-            Execute();
+            Thread thread = new Thread(Execute);
+            thread.Start();
         }
 
         private void selectAll_Click(object sender, RoutedEventArgs e)
