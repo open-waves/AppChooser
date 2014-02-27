@@ -30,7 +30,7 @@ namespace ApplicationChooser
 
                 configFilePath = string.IsNullOrEmpty(configFilePath) ? "apps.xml" : configFilePath;
                 var config = XDocument.Load(configFilePath);
-                Items = config.Element("apps").Elements("app").Select(n => GetAppNode(n)).ToList();
+                Items = config.Element("apps").Elements("app").Select(GetAppNode).ToList();
             }
             catch (FileNotFoundException ex)
             {
@@ -53,6 +53,11 @@ namespace ApplicationChooser
 
         private AppItemViewModel GetAppNode(XElement appNode)
         {
+            return GetAppNode(appNode, null);
+        }
+
+        private AppItemViewModel GetAppNode(XElement appNode, AppItemViewModel parent)
+        {
             var item = new AppItemViewModel(new AppItem
                                      {
                                          Name = (string)appNode.Attribute("name"),
@@ -60,17 +65,13 @@ namespace ApplicationChooser
                                          Arguments = (string)appNode.Attribute("arguments"),
                                          IsRequired = (bool?)appNode.Attribute("required") ?? false
                                      });
+            item.Parent = parent;
 
-            var isVisible = (bool?)appNode.Attribute("visible") ?? true;
-            item.Visibility = isVisible ? Visibility.Visible : Visibility.Collapsed;
-
-            if (!isVisible)
-                item.IsSelected = true;
+            item.IsSelected = ((bool?)appNode.Attribute("selected") ?? false) || (parent != null && parent.IsSelected);
 
             foreach (var node in appNode.Elements("app"))
             {
-                var child = GetAppNode(node);
-                child.Parent = item;
+                var child = GetAppNode(node, item);
                 item.SubApps.Add(child);
             }
 

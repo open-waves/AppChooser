@@ -40,7 +40,6 @@
                     <TreeView x:Name="tree" ItemsSource="{Binding Items}" BorderThickness="0">
                         <!--<TreeView.ItemContainerStyle>
                         <Style TargetType="TreeViewItem">
-                            <Setter Property="IsExpanded" Value="True"/>
                             <Setter Property="Margin" Value="0,3"/>
                         </Style>
                     </TreeView.ItemContainerStyle>-->
@@ -50,14 +49,6 @@
                             </HierarchicalDataTemplate>
                         </TreeView.ItemTemplate>
                     </TreeView>
-
-                    <!--<ItemsControl x:Name="itemsControl" ItemsSource="{Binding Items}">
-                    <ItemsControl.ItemTemplate>
-                        <DataTemplate>
-                            <CheckBox IsChecked="{Binding IsSelected, Mode=TwoWay}" Content="{Binding Name}" IsEnabled="{Binding IsOptional}" />
-                        </DataTemplate>
-                    </ItemsControl.ItemTemplate>
-                </ItemsControl>-->
                 </StackPanel>
             </ScrollViewer>
         </GroupBox>

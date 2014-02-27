@@ -37,8 +37,6 @@ namespace ApplicationChooser
             get { return !appItem.IsRequired && !SubApps.Exists(s => s.appItem.IsRequired); }
         }
 
-        public Visibility Visibility { get; set; }
-
         public string Name
         {
             get { return appItem.Name; }
@@ -56,6 +54,7 @@ namespace ApplicationChooser
         }
 
         private readonly List<AppItemViewModel> subApps = new List<AppItemViewModel>();
+
         public List<AppItemViewModel> SubApps
         {
             get { return subApps; }
