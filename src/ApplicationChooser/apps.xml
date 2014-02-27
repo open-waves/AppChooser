@@ -2,10 +2,12 @@
 <apps>
   <app name="cmd test" command="cmd" arguments="/C &quot;pause&quot;" required="0">
     <app name="firefox" command="firefox" visible="1" />
+    <app name="firefox" command="firefox" visible="1" />
   </app>
   <app name="short timeout" command="timeout" arguments="2" />
   <app name="long timeout" command="timeout" arguments="20" />
   <app name="cmd test2" command="cmd">
+    <app name="short timeout" command="timeout" arguments="2" />
     <app name="test2 sub1" command="cmd" />
     <app name="taskmgr" command="taskmgr" />
     <app name="cmd" command="cmd" required="1" />

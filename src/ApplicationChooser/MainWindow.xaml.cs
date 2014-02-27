@@ -73,20 +73,20 @@ namespace ApplicationChooser
                 child.Parent = item;
                 item.SubApps.Add(child);
             }
-            
+
             return item;
         }
 
         private void Execute()
         {
-            var selectedItems = GetItemsToExecute(Items.Where(it => it.IsSelected));
+            var selectedItems = GetItemsToExecute(Items);
             var i = 0.0;
             var failedItems = new List<AppItem>();
             foreach (var itemView in selectedItems)
             {
                 try
                 {
-                    if (string.IsNullOrEmpty(itemView.AppItem.Command))
+                    if (string.IsNullOrWhiteSpace(itemView.AppItem.Command))
                         continue;
 
                     var process = Process.Start(itemView.AppItem.Command, itemView.AppItem.Arguments);
@@ -101,7 +101,7 @@ namespace ApplicationChooser
                     Log.WriteLine(string.Format("Could not execute item {0}", itemView.AppItem.Name), ex);
                     failedItems.Add(itemView.AppItem);
                 }
-                
+
                 i++;
             }
 
@@ -117,11 +117,11 @@ namespace ApplicationChooser
             var apps = new List<AppItemViewModel>();
             foreach (var model in itemViewModels)
             {
-                if (model.SubApps.All(x => x.IsSelected))
+                if (model.IsSelected)
                 {
                     apps.Add(model);
+                    apps.AddRange(GetItemsToExecute(model.SubApps));
                 }
-                apps.AddRange(GetItemsToExecute(model.SubApps));
             }
 
             return apps;
@@ -129,7 +129,7 @@ namespace ApplicationChooser
 
         private void UpdateStatus(string statusText, double value)
         {
-            this.Dispatcher.Invoke((Action) (() =>
+            this.Dispatcher.Invoke((Action)(() =>
                                                  {
                                                      progressLabel.Text = statusText;
                                                      progressBar.Value = value;
