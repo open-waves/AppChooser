@@ -57,7 +57,7 @@
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
-            <Button Grid.Column="1" x:Name="button" Click="button_Click" Content="OK" Width="60" Height="25" HorizontalAlignment="Right" Margin="10"  />
+            <Button Grid.Column="1" x:Name="button" Click="button_Click" Content="Install" Width="60" Height="25" HorizontalAlignment="Right" Margin="10"  />
             <ProgressBar Grid.Column="0" x:Name="progressBar" Margin="10" Visibility="Collapsed" IsIndeterminate="False" />
             <TextBlock Grid.Column="0"  x:Name="progressLabel" VerticalAlignment="Center" Margin="15,0,15,0" />
         </Grid>
