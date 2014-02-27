@@ -142,6 +142,7 @@ namespace ApplicationChooser
             button.IsEnabled = false;
             Thread thread = new Thread(Execute);
             thread.Start();
+            IsEnabled = false;
         }
 
         private void selectAll_Click(object sender, RoutedEventArgs e)

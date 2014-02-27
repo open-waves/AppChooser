@@ -31,7 +31,6 @@
         <GroupBox Grid.Row="0" Header="Available applications" Padding="10" Margin="10, 10, 10, 0" >
             <ScrollViewer>
                 <StackPanel x:Name="stackPanel" CanHorizontallyScroll="True" CanVerticallyScroll="True">
-
                     <StackPanel Orientation="Horizontal" Margin="0,0,0,5">
                         <Button Click="selectAll_Click" Content="Select All" Style="{StaticResource LinkButtonStyle}" />
                         <TextBlock Text=" / " />
