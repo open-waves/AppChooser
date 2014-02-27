@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -144,12 +143,6 @@ namespace ApplicationChooser
                                                      progressLabel.Text = currentItem.Name;
                                                      progressBar.Value = value;
                                                  }));
-            
-            
-            //pretty...useless
-            //var duration = new Duration(TimeSpan.FromSeconds(5));
-            //var doubleanimation = new DoubleAnimation(value, duration);
-            //progressBar.BeginAnimation(ProgressBar.ValueProperty, doubleanimation);
         }
 
         private void button_Click(object sender, RoutedEventArgs e)
