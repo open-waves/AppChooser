@@ -1,7 +1,8 @@
 ﻿<Window x:Class="ApplicationChooser.MainWindow"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    Title="Choose applications" Width="480" Height="800">
+    Title="Choose applications" Width="580" Height="800"
+    WindowStartupLocation="Manual" Left="1" Top="1">
     <Window.Resources>
         <Style x:Key="LinkButtonStyle" TargetType="Button">
             <Setter Property="Template">
