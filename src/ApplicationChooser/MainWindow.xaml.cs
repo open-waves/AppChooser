@@ -9,9 +9,6 @@ using System.Threading;
 
 namespace ApplicationChooser
 {
-    /// <summary>
-    /// Interaction logic for MainWindow.xaml
-    /// </summary>
     public partial class MainWindow : Window
     {
         public IList<AppItemViewModel> Items { get; set; }
@@ -82,43 +79,37 @@ namespace ApplicationChooser
 
         private void Execute()
         {
-
             var selectedItems = GetItemsToExecute(Items.Where(it => it.IsSelected));
-            var i = 0;
+            var i = 0.0;
             var failedItems = new List<AppItem>();
             foreach (var itemView in selectedItems)
             {
                 try
                 {
-                    // skip empty commands
-
-                    
-
-
                     if (string.IsNullOrEmpty(itemView.AppItem.Command))
                         continue;
 
                     var process = Process.Start(itemView.AppItem.Command, itemView.AppItem.Arguments);
-                    
                     if (process != null)
+                    {
+                        UpdateStatus(itemView.AppItem.Name, (i * 100) / selectedItems.Count);
                         process.WaitForExit();
-                    UpdateStatus(itemView.AppItem, (Convert.ToDouble(++i) * 100) / selectedItems.Count());
-                    
+                    }
                 }
                 catch (Exception ex)
                 {
                     Log.WriteLine(string.Format("Could not execute item {0}", itemView.AppItem.Name), ex);
                     failedItems.Add(itemView.AppItem);
                 }
+                
+                i++;
             }
+
+            UpdateStatus("Finished", 100);
 
             if (failedItems.Count > 0)
                 MessageBox.Show(string.Format("Could not execute the following items:\n{0}",
                                               string.Join("\n", failedItems.Select(it => it.Name).ToArray())), "Error");
-
-            
-            
-            
         }
 
         private List<AppItemViewModel> GetItemsToExecute(IEnumerable<AppItemViewModel> itemViewModels)
@@ -136,11 +127,11 @@ namespace ApplicationChooser
             return apps;
         }
 
-        private void UpdateStatus(AppItem currentItem, double value)
+        private void UpdateStatus(string statusText, double value)
         {
             this.Dispatcher.Invoke((Action) (() =>
                                                  {
-                                                     progressLabel.Text = currentItem.Name;
+                                                     progressLabel.Text = statusText;
                                                      progressBar.Value = value;
                                                  }));
         }
