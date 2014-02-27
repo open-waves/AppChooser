@@ -86,9 +86,6 @@ namespace ApplicationChooser
             {
                 try
                 {
-                    if (string.IsNullOrWhiteSpace(itemView.AppItem.Command))
-                        continue;
-
                     var process = Process.Start(itemView.AppItem.Command, itemView.AppItem.Arguments);
                     if (process != null)
                     {
@@ -119,7 +116,9 @@ namespace ApplicationChooser
             {
                 if (model.IsSelected)
                 {
-                    apps.Add(model);
+                    if (string.IsNullOrWhiteSpace(model.AppItem.Command) == false)
+                        apps.Add(model);
+                        
                     apps.AddRange(GetItemsToExecute(model.SubApps));
                 }
             }

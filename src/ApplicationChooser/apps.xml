@@ -13,7 +13,7 @@
     <app name="cmd" command="cmd" required="1" />
   </app>
   <app name="app with error" command="dir" />
-  <app name="test4" command="cmd">
+  <app name="empty parrent task" command="">
     <app name="test4 sub1" command="cmd" />
     <app name="test4 sub2" command="cmd" visible="1" />
   </app>
