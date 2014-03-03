@@ -1,7 +1,9 @@
 using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace ApplicationChooser
 {
+    [DebuggerDisplay("{Name}")]
     public class AppItemViewModel : ViewModelBase
     {
         private readonly AppItem _appItem;

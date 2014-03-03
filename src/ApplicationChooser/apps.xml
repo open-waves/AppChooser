@@ -4,6 +4,7 @@
     <app name="test4 sub2" command="cmd" selected="0" />
     <app name="firefox" command="firefox" selected="1" />
     <app name="firefox" command="firefox" selected="1" />
+    <app name="cmd subtetst" command="cmd" selected="0" />
   </app>
   <app name="short timeout" command="timeout" arguments="2" />
   <app name="long timeout" command="timeout" arguments="20" />

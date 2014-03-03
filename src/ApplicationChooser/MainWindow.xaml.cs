@@ -22,7 +22,7 @@ namespace ApplicationChooser
             LoadApps();
             DataContext = this;
 
-            // Trying to solve problem with frozen white screen which happens ocassionaly at startup.
+            // Trying to solve problem with frozen white screen which happens occasionally at startup.
             _timer = new Timer(
                 state => Dispatcher.Invoke((Action)(UpdateLayout)), 
                 null, TimeSpan.FromSeconds(2), TimeSpan.FromMilliseconds(-1));
@@ -68,10 +68,10 @@ namespace ApplicationChooser
 
         private AppItemViewModel GetAppNode(XElement appNode)
         {
-            return GetAppNode(appNode, null);
+            return GetAppNode(appNode, false);
         }
 
-        private AppItemViewModel GetAppNode(XElement appNode, AppItemViewModel parent)
+        private AppItemViewModel GetAppNode(XElement appNode, bool isParentSelected)
         {
             var item = new AppItemViewModel(new AppItem
                                      {
@@ -80,13 +80,14 @@ namespace ApplicationChooser
                                          Arguments = (string)appNode.Attribute("arguments"),
                                          IsRequired = (bool?)appNode.Attribute("required") ?? false
                                      });
-            item.Parent = parent;
 
-            item.IsSelected = ((bool?)appNode.Attribute("selected") ?? false) || (parent != null && parent.IsSelected);
+            var isCurrentSelected = ((bool?)appNode.Attribute("selected") ?? false);
+            item.IsSelected = isCurrentSelected || isParentSelected;
 
             foreach (var node in appNode.Elements("app"))
             {
-                var child = GetAppNode(node, item);
+                var child = GetAppNode(node, isCurrentSelected);
+                child.Parent = item;
                 item.SubApps.Add(child);
             }
 

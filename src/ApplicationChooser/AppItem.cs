@@ -1,5 +1,8 @@
+using System.Diagnostics;
+
 namespace ApplicationChooser
 {
+    [DebuggerDisplay("{Name}")]
     public class AppItem
     {
         public string Name { get; set; }
