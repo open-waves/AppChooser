@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Windows;
+using System.Xml;
 using System.Xml.Linq;
 using System.Threading;
 
@@ -41,21 +42,28 @@ namespace ApplicationChooser
             }
             catch (FileNotFoundException ex)
             {
-                Log.WriteLine("could not find apps.xml", ex);
-                MessageBox.Show("Unable to find apps.xml", "Error");
-                Close();
+                LogAndInformUser("could not find xml file", ex);
+            }
+            catch (XmlException ex)
+            {
+                LogAndInformUser("invalid xml file structure", ex);
             }
             catch (NullReferenceException ex)
             {
-                Log.WriteLine("invalid apps.xml structure", ex);
-                MessageBox.Show("Invalid apps.xml structure", "Error");
-                Close();
+                LogAndInformUser("invalid xml file structure", ex);
             }
             catch (Exception ex)
             {
                 Log.WriteLine("Unknown error", ex);
                 Close();
             }
+        }
+
+        private void LogAndInformUser(string message, Exception ex)
+        {
+            Log.WriteLine(message, ex);
+            MessageBox.Show(message, "Error");
+            Close();
         }
 
         private AppItemViewModel GetAppNode(XElement appNode)
