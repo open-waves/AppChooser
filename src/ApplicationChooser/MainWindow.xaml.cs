@@ -11,6 +11,8 @@ namespace ApplicationChooser
 {
     public partial class MainWindow : Window
     {
+// ReSharper disable once NotAccessedField.Local
+        private readonly Timer _timer;
         public IList<AppItemViewModel> Items { get; set; }
 
         public MainWindow()
@@ -18,6 +20,11 @@ namespace ApplicationChooser
             InitializeComponent();
             LoadApps();
             DataContext = this;
+
+            // Trying to solve problem with frozen white screen which happens ocassionaly at startup.
+            _timer = new Timer(
+                state => Dispatcher.Invoke((Action)(UpdateLayout)), 
+                null, TimeSpan.FromSeconds(2), TimeSpan.FromMilliseconds(-1));
         }
 
         public void LoadApps()
