@@ -5,11 +5,11 @@ namespace ApplicationChooser
 {
     public class Log
     {
-        private static string logPath = "appChooser.log";
+        private const string LogPath = "appChooser.log";
 
         public static void WriteLine(string text)
         {
-            File.AppendAllText(logPath, string.Format("{0}\r\n", text));
+            File.AppendAllText(LogPath, string.Format("{0}\r\n", text));
         }
 
         public static void WriteLine(string text, Exception ex)
