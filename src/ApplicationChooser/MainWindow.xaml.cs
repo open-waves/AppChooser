@@ -12,23 +12,30 @@ namespace ApplicationChooser
 {
     public partial class MainWindow : Window
     {
-// ReSharper disable once NotAccessedField.Local
+        // ReSharper disable once NotAccessedField.Local
         private readonly Timer _timer;
         public IList<AppItemViewModel> Items { get; set; }
 
         public MainWindow()
         {
             InitializeComponent();
-            LoadApps();
+            var isLoaded = LoadApps();
+
+            if (isLoaded == false)
+            {
+                Close();
+                return;
+            }
+
             DataContext = this;
 
             // Trying to solve problem with frozen white screen which happens occasionally at startup.
             _timer = new Timer(
-                state => Dispatcher.Invoke((Action)(UpdateLayout)), 
+                state => Dispatcher.Invoke((Action)(UpdateLayout)),
                 null, TimeSpan.FromSeconds(2), TimeSpan.FromMilliseconds(-1));
         }
 
-        public void LoadApps()
+        public bool LoadApps()
         {
             try
             {
@@ -37,33 +44,52 @@ namespace ApplicationChooser
                     configFilePath = App.Args[0];
 
                 configFilePath = string.IsNullOrEmpty(configFilePath) ? "apps.xml" : configFilePath;
-                var config = XDocument.Load(configFilePath);
-                Items = config.Element("apps").Elements("app").Select(GetAppNode).ToList();
-            }
-            catch (FileNotFoundException ex)
-            {
-                LogAndInformUser("could not find xml file", ex);
-            }
-            catch (XmlException ex)
-            {
-                LogAndInformUser("invalid xml file structure", ex);
-            }
-            catch (NullReferenceException ex)
-            {
-                LogAndInformUser("invalid xml file structure", ex);
+
+                if (File.Exists(configFilePath) == false)
+                {
+                    LogAndInformUser("Could not find xml file");
+                    return false;
+                }
+
+                XDocument config;
+                try
+                {
+                    config = XDocument.Load(configFilePath);
+                }
+                catch (XmlException ex)
+                {
+                    LogAndInformUser("Invalid xml file structure", ex);
+                    return false;
+                }
+
+                var appsElement = config.Element("apps");
+                if (appsElement == null)
+                {
+                    LogAndInformUser("Invalid xml file structure");
+                    return false;
+                }
+
+                Items = appsElement.Elements("app").Select(GetAppNode).ToList();
             }
             catch (Exception ex)
             {
                 Log.WriteLine("Unknown error", ex);
-                Close();
+                return false;
             }
+
+            return true;
+        }
+
+        private static void LogAndInformUser(string message)
+        {
+            Log.WriteLine(message);
+            MessageBox.Show(message, "Error");
         }
 
         private void LogAndInformUser(string message, Exception ex)
         {
             Log.WriteLine(message, ex);
             MessageBox.Show(message, "Error");
-            Close();
         }
 
         private AppItemViewModel GetAppNode(XElement appNode)
@@ -135,7 +161,7 @@ namespace ApplicationChooser
                 {
                     if (string.IsNullOrWhiteSpace(model.AppItem.Command) == false)
                         apps.Add(model);
-                        
+
                     apps.AddRange(GetItemsToExecute(model.SubApps));
                 }
             }
